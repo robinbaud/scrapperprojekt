@@ -19,11 +19,12 @@ class RecipeController extends Controller
     {
         $recipes = DB::table('recipenames')
         ->join('ingredients', 'recipenames.key', '=', 'ingredients.key')
-        ->select('recipenames.title', 'ingredients.ingredients')
+        ->select('recipenames.title', 'ingredients.ingredients', 'ingredients.steps')
 
         ->get();
         foreach($recipes as $recipe){
             $recipe->ingredients = json_decode($recipe->ingredients);
+            $recipe->steps = json_decode($recipe->steps);
         };
         return $recipes;
     }
@@ -43,8 +44,9 @@ class RecipeController extends Controller
         foreach($parseddata as $datum) {
             $unique = uniqid();
             $ingredients = json_encode($datum->Ingredients);
+            $steps = json_encode($datum->Step);
             Recipename::create(['title' => $datum->Title, 'description' => '', 'key' => $unique]);
-             Ingredients::create(['ingredients' => $ingredients, 'key' => $unique]);
+             Ingredients::create(['ingredients' => $ingredients, 'steps' => $steps, 'key' => $unique]);
         }
         return ("ok");
     }

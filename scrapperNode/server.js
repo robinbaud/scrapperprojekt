@@ -42,14 +42,20 @@ fastify.post("/all", (req, res) => {
     }
     const data = JSON.parse(jsonString);
     data.map(async (datum, index) => {
+      console.log(datum.Step);
       const element = {
         titre: datum.Title,
         ingredients: datum.Ingredients,
+        etapes: datum.Step,
       };
       const recipe = new Recipes({ ...element });
       await recipe
         .save()
-        .then(() => res.status(201).send(recipe))
+        .then(() =>
+          res
+            .status(201)
+            .send({ step: datum.Step, etapes: element.etapes, recipe })
+        )
         .catch((error) => res.status(400).send({ error }));
     });
   });

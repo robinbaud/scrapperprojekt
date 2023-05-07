@@ -11,6 +11,7 @@ class Ingredients extends Model
 
     protected $fillable = [
     'ingredients',
+    'steps',
     'key'
     ];
 }

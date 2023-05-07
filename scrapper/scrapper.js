@@ -29,8 +29,11 @@ setTimeout(() => {
       const titleTab = title.split("\n");
       const ingredients = $(".mntl-structured-ingredients__list-item").text();
       const ingredientsTab = ingredients.split("\n");
+      const steps = $(".recipe__steps-content li p").text();
+      const stepsTab = steps.split("\n");
       link["Title"] = titleTab.filter((i) => i.length > 0)[0];
       link["Ingredients"] = ingredientsTab.filter((i) => i.length > 0);
+      link["Step"] = stepsTab.filter((i) => i.length > 0);
     });
   });
 }, 2000);
