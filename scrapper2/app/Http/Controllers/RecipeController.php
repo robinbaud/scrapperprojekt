@@ -15,17 +15,22 @@ class RecipeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $title = '';
+        if($request->title){
+            $title = $request->title;
+        };
         $recipes = DB::table('recipenames')
         ->join('ingredients', 'recipenames.key', '=', 'ingredients.key')
         ->select('recipenames.title', 'ingredients.ingredients', 'ingredients.steps')
-
+        ->where('recipenames.title', 'LIKE', '%'.$title.'%')
         ->get();
         foreach($recipes as $recipe){
             $recipe->ingredients = json_decode($recipe->ingredients);
             $recipe->steps = json_decode($recipe->steps);
         };
+
         return $recipes;
     }
 
@@ -43,9 +48,15 @@ class RecipeController extends Controller
         $parseddata = json_decode($data);
         foreach($parseddata as $datum) {
             $unique = uniqid();
-            $ingredients = json_encode($datum->Ingredients);
-            $steps = json_encode($datum->Step);
-            Recipename::create(['title' => $datum->Title, 'description' => '', 'key' => $unique]);
+
+            $ingredients = isset($datum->Ingredients) ?json_encode($datum->Ingredients) : '';
+            $title = isset($datum->Title) ? $datum->Title : '';
+
+
+            $steps = isset($datum->Step) ? json_encode($datum->Step) : '';
+
+
+            Recipename::create(['title' => $title, 'description' => '', 'key' => $unique]);
              Ingredients::create(['ingredients' => $ingredients, 'steps' => $steps, 'key' => $unique]);
         }
         return ("ok");

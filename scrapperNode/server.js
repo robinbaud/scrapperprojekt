@@ -30,9 +30,16 @@ fastify.post("/recipes", async (req, res) => {
     .catch((error) => res.status(400).send({ error }));
 });
 fastify.get("/all", (req, reply) => {
-  Recipes.find().then((r) => {
-    reply.send(r);
-  });
+  let titre = "";
+  if (req.query.titre) {
+    titre = req.query.titre;
+  }
+  Recipes.find()
+    .then((r) => {
+      response = r.filter((recipe) => recipe.titre?.includes(titre));
+      reply.send(response);
+    })
+    .catch((err) => reply.send(err));
 });
 fastify.post("/all", (req, res) => {
   fs.readFile("../scrapper/data.json", "utf8", (err, jsonString) => {

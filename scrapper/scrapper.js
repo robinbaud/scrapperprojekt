@@ -56,7 +56,7 @@ setTimeout(() => {
       if (err) console.log("error", err);
     }
   );
-}, 10000);
+}, 12000);
 // setTimeout(() => {
 //   links.map((link) => {
 //     axios.post("http://127.0.0.1:8000/api/recipes", {
