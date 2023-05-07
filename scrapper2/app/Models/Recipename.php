@@ -12,5 +12,6 @@ class Recipename extends Model
     protected $fillable = [
         'title',
         'description',
+        'key'
     ];
 }

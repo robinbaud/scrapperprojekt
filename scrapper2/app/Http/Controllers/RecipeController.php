@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ingredients;
 use App\Models\Recipe;
+use App\Models\Recipename;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RecipeController extends Controller
 {
@@ -14,7 +17,15 @@ class RecipeController extends Controller
      */
     public function index()
     {
-        return Recipe::all();
+        $recipes = DB::table('recipenames')
+        ->join('ingredients', 'recipenames.key', '=', 'ingredients.key')
+        ->select('recipenames.title', 'ingredients.ingredients')
+
+        ->get();
+        foreach($recipes as $recipe){
+            $recipe->ingredients = json_decode($recipe->ingredients);
+        };
+        return $recipes;
     }
 
     /**
@@ -25,7 +36,17 @@ class RecipeController extends Controller
      */
     public function store(Request $request)
     {
-        return Recipe::create($request->all());
+
+
+        $data = file_get_contents(__DIR__ . "/../data.json");
+        $parseddata = json_decode($data);
+        foreach($parseddata as $datum) {
+            $unique = uniqid();
+            $ingredients = json_encode($datum->Ingredients);
+            Recipename::create(['title' => $datum->Title, 'description' => '', 'key' => $unique]);
+             Ingredients::create(['ingredients' => $ingredients, 'key' => $unique]);
+        }
+        return ("ok");
     }
 
     /**
