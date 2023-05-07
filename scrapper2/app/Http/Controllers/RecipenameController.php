@@ -25,7 +25,17 @@ class RecipenameController extends Controller
      */
     public function store(Request $request)
     {
-        return Recipename::create($request->all());
+        $data = file_get_contents(__DIR__ . "/../data.json");
+
+        $parseddata = json_decode($data);
+        // function gettitle($datum) {
+
+        //     return $title;
+        // };
+        foreach($parseddata as $datum) {
+            Recipename::create(['title' => $datum->Title, 'description' => '']);
+        }
+        return ("ok");
     }
 
     /**

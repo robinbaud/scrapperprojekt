@@ -29,6 +29,11 @@ fastify.post("/recipes", async (req, res) => {
     .then(() => res.status(201).send(recipe))
     .catch((error) => res.status(400).send({ error }));
 });
+fastify.get("/all", (req, reply) => {
+  Recipes.find().then((r) => {
+    reply.send(r);
+  });
+});
 fastify.post("/all", (req, res) => {
   fs.readFile("../scrapper/data.json", "utf8", (err, jsonString) => {
     if (err) {

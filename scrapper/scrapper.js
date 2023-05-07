@@ -46,6 +46,13 @@ setTimeout(() => {
   fs.writeFile("data.json", jsondata, function (err, result) {
     if (err) console.log("error", err);
   });
+  fs.writeFile(
+    __dirname + "/../scrapper2/app/Http/data.json",
+    jsondata,
+    function (err, result) {
+      if (err) console.log("error", err);
+    }
+  );
 }, 10000);
 // setTimeout(() => {
 //   links.map((link) => {
