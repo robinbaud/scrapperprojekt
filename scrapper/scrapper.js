@@ -1,6 +1,6 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
-
+const fs = require("fs");
 function getLinks() {
   const linksMap = [];
   axios("https://www.allrecipes.com/recipes/17562/dinner/").then((res) => {
@@ -35,11 +35,16 @@ setTimeout(() => {
   });
 }, 2000);
 setTimeout(() => {
-  links.map((link) => {
-    axios.post("http://127.0.0.1:3000/recipes", {
-      titre: link.Title,
-      ingredients: link.Ingredients,
-    });
+  // links.map((link) => {
+  //   axios.post("http://127.0.0.1:3000/recipes", {
+  //     titre: link.Title,
+  //     ingredients: link.Ingredients,
+  //   });
+
+  // });
+  const jsondata = JSON.stringify(links);
+  fs.writeFile("data.json", jsondata, function (err, result) {
+    if (err) console.log("error", err);
   });
 }, 10000);
 // setTimeout(() => {

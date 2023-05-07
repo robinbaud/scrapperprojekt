@@ -1,6 +1,7 @@
 const fastify = require("fastify")({ logger: true });
 const axios = require("axios");
 const cheerio = require("cheerio");
+const fs = require("fs");
 const mongoose = require("mongoose");
 const Recipes = require("./models/recipes.js");
 
@@ -27,6 +28,26 @@ fastify.post("/recipes", async (req, res) => {
     .save()
     .then(() => res.status(201).send(recipe))
     .catch((error) => res.status(400).send({ error }));
+});
+fastify.post("/all", (req, res) => {
+  fs.readFile("../scrapper/data.json", "utf8", (err, jsonString) => {
+    if (err) {
+      res.send(err);
+      return;
+    }
+    const data = JSON.parse(jsonString);
+    data.map(async (datum, index) => {
+      const element = {
+        titre: datum.Title,
+        ingredients: datum.Ingredients,
+      };
+      const recipe = new Recipes({ ...element });
+      await recipe
+        .save()
+        .then(() => res.status(201).send(recipe))
+        .catch((error) => res.status(400).send({ error }));
+    });
+  });
 });
 // function getLinks() {
 //   const linksMap = [];
